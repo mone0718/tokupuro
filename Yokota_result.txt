@@ -1,0 +1,8 @@
+y = 50, x = 5.59 (Palm)
+y = 50, x = 0.58 (Finger)
+y = 25, x = 3.43 (Palm)
+y = 75, x = 7.76 (Palm)
+y = 25, x = 0.01 (Finger)
+y = 75, x = 1.14 (Finger)
+閾値: 5.59(Palm), 0.58(Finger)
+感度: 4.33(Palm), 1.13(Finger)
