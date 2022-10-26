@@ -4,7 +4,7 @@
 % アナログデータを取りまとめて、心理物理曲線を得る
 
 %被験者名
-defaultanswer = {'Fujita'};
+defaultanswer = {'Egashira'};
 subject = inputdlg({'subject'},'Input the answer',1,defaultanswer);
 subject_name = char(subject(1));
 
@@ -29,24 +29,6 @@ output_finger = readmatrix(strcat(subject_name, ".csv"), 'Range', 'A1:H1');
 %ひとつのfigureに指と腕、ふたつの心理物理曲線を描画
 %軸名、数値、凡例などを適切なフォントやサイズで
 
-figure1 = figure(1);
-
-p1 = plot(stim_finger,output_finger*10,'r.','MarkerSize',30); %点でプロット
-
-hold on %前の図も残るように固定
-p2 =plot(stim_palm,output_palm*10,'b.','MarkerSize',30);
-hold off
-
-title('two-point discrimination'); %タイトル
-
-xlabel('Distance [mm]'); %x軸の名前
-ylabel('% of "Two Points" Judgement'); %y軸の名前
-
-xticks([0,1,2,3,4,5,6,7,8,9,10,11,12,13]); %メモリの刻み
-
-fontsize = 16; %フォントサイズの設定
-h = gca; %図をhとしてset関数で変更できるようにする
-set(h,'fontsize',fontsize);
 
 
 %【課題4】ひとつのfigureに指と腕、ふたつの心理物理曲線を描画
@@ -65,16 +47,55 @@ b_palm = glmfit(stim_palm,[result_palm n],'binomial','Link','probit');
 b_finger = glmfit(stim_finger,[result_finger n],'binomial','Link','probit');
 
 %xのかさ増し
-stim_x = linspace(0,14);
+stim_x = linspace(0,15);
 n = linspace(10,10);
 
 %推定成功回数を計算
 yfit_palm = glmval(b_palm,stim_x,'probit','Size',n);
 yfit_finger = glmval(b_finger,stim_x,'probit','Size',n);
 
+figure1 = figure(1);
+
 hold on 
-p3 = plot(stim_x,yfit_palm*10,'b-',stim_x,yfit_finger*10,'r-');
+p3 = plot(stim_x,yfit_finger*10,'-', 'Color','[1 0.6 0.6]', 'LineWidth', 5);
 hold off
+
+hold on 
+p4 = plot(stim_x,yfit_palm*10,'-', 'Color','[0.6 0.6 1]', 'LineWidth', 5);
+hold off
+
+hold on
+p1 = plot(stim_finger,output_finger*10,'r.','MarkerSize',40); %点でプロット
+hold off
+
+hold on %前の図も残るように固定
+p2 =plot(stim_palm,output_palm*10,'b.','MarkerSize',40);
+hold off
+
+%{
+hold on
+p5 = plot(stim_finger,output_finger*10,'wo','MarkerSize',11);
+hold off
+
+hold on
+p6 = plot(stim_palm,output_palm*10,'wo','MarkerSize',11);
+hold off
+%}
+
+%title('two-point discrimination'); %タイトル
+
+xlabel('Distance [mm]'); %x軸の名前
+ylabel('% of "Two Points" Judgement'); %y軸の名前
+
+xticks([0,1,2,3,4,5,6,7,8,9,10,11,12,13]); %メモリの刻み
+%xticks([0,5,10,13]);
+
+grid on
+box on
+
+fontsize = 16; %フォントサイズの設定
+h = gca; %図をhとしてset関数で変更できるようにする
+set(h,'fontsize',fontsize);
 
 
 %【課題5】ふたつの身体部位の触覚感度を定量評価
@@ -87,15 +108,15 @@ fileId = fopen(fileName, 'w');
 %y=50のときのx
 
 [x1, x2, y1, y2] = find_plot(stim_x, yfit_palm, 50); %座標
-X = calc_threshold(x1, x2, y1, y2, 50); %閾値
-fprintf(fileId, 'y = %2.0f, x = %4.2f (Palm)\n',50, X); %ファイルに書き込む
+X_palm_50 = calc_threshold(x1, x2, y1, y2, 50); %閾値
+fprintf(fileId, 'y = %2.0f, x = %4.2f (Palm)\n',50, X_palm_50); %ファイルに書き込む
 
 %s = ['palm,50%:', num2str(X)]; %num2strは数値を文字列に変換
 %disp(s);
 
 [x1, x2, y1, y2] = find_plot(stim_x, yfit_finger, 50);
-X = calc_threshold(x1, x2, y1, y2, 50);
-fprintf(fileId, 'y = %2.0f, x = %4.2f (Finger)\n',50, X);
+X_finger_50 = calc_threshold(x1, x2, y1, y2, 50);
+fprintf(fileId, 'y = %2.0f, x = %4.2f (Finger)\n',50, X_finger_50);
 
 
 %感度...刺激の変化にどれくらい敏感か
@@ -122,8 +143,8 @@ fprintf(fileId, 'y = %2.0f, x = %4.2f (Finger)\n',75, X_finger_75);
 
 sensitivity_finger = X_finger_75 - X_finger_25;
 
-fprintf(fileId, '閾値: %4.2f(Palm), %4.2f(Finger)/n',sensitivity_palm,sensitivity_finger);
-fprintf(fileId, '感度: %4.2f(Palm), %4.2f(Finger)',sensitivity_palm,sensitivity_finger);
+fprintf(fileId, '閾値: %4.2f(Palm), %4.2f(Finger)\n',X_palm_50,X_finger_50);
+fprintf(fileId, '感度: %4.2f(Palm), %4.2f(Finger)\n',sensitivity_palm,sensitivity_finger);
 
 
 legend([p1 p2],{'finger','palm'},'Location','southeast'); %凡例
