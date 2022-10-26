@@ -150,7 +150,7 @@ h = gca; %図をhとしてset関数で変更できるようにする
 set(h,'fontsize',fontsize);
 %h.YLabel.FontSize = 26;
 
-%legend([p1 p2],{'finger','palm'},'Location','southeast'); %凡例
+legend([p1 p2],{'finger','palm'},'Location','southeast'); %凡例
 
 %Figure ファイルの保存
 output_figname = sprintf('%s_TPD',subject_name);
