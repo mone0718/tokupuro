@@ -25,11 +25,6 @@ output_palm = readmatrix(strcat(subject_name, ".csv"), 'Range', 'A2:H2');
 output_finger = readmatrix(strcat(subject_name, ".csv"), 'Range', 'A1:H1');
 
 
-%【課題3】ひとつのfigureに指と腕、ふたつの心理物理曲線を描画
-%ひとつのfigureに指と腕、ふたつの心理物理曲線を描画
-%軸名、数値、凡例などを適切なフォントやサイズで
-
-
 
 %【課題4】ひとつのfigureに指と腕、ふたつの心理物理曲線を描画
 
@@ -104,7 +99,10 @@ fprintf(fileId, '閾値: %4.2f(Palm), %4.2f(Finger)\n',X_palm_50,X_finger_50);
 fprintf(fileId, '感度: %4.2f(Palm), %4.2f(Finger)\n',sensitivity_palm,sensitivity_finger);
 
 
-%図示
+
+%【課題3】ひとつのfigureに指と腕、ふたつの心理物理曲線を描画
+%ひとつのfigureに指と腕、ふたつの心理物理曲線を描画
+%軸名、数値、凡例などを適切なフォントやサイズで
 
 figure1 = figure(1);
 
